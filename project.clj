@@ -6,6 +6,7 @@
                  [org.clojure/clojurescript "0.0-2755"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [org.omcljs/om "0.8.8"]
+                 [om-sync "0.1.1"]
                  [io.pedestal/pedestal.service "0.3.1"]
                  [io.pedestal/pedestal.jetty "0.3.1"]
                  [ch.qos.logback/logback-classic "1.1.2" :exclusions [org.slf4j/slf4j-api]]

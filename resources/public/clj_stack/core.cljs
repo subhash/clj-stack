@@ -2,7 +2,8 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om]
             [om.dom :as dom]
-            [cljs.core.async :refer [chan put! <!]]))
+            [cljs.core.async :refer [chan put! <!]]
+            [om-sync.util :refer [edn-xhr]]))
 
 (enable-console-print!)
 
@@ -38,7 +39,6 @@
   (reify om/IRenderState
     (render-state [_ {:keys [delete_channel]}]
       (dom/li #js {:className "col-sm-4"}
-        ;(dom/a #js {:href (:url video)} (:title video))
         (dom/div #js {:className "embed-responsive embed-responsive-4by3"}
           (dom/iframe #js {:className "embed-responsive-item"
                            :src (:url video)}))
@@ -75,7 +75,9 @@
           (dom/hr nil)
           (om/build new-video-view (:videos model))))))
 
-(om/root
-  app-view
-  app-model
-  {:target (. js/document (getElementById "app"))})
+(edn-xhr
+ (let [target (. js/document (getElementById "app"))]
+   {:method :get
+    :url "/videos"
+    :on-complete #(om/root app-view % {:target target})}))
+
