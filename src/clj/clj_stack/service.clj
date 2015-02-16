@@ -20,11 +20,12 @@
   (bootstrap/edn-response @data-model))
 
 (defn delete-video [request]
-  (let [id (get-in request [:path-params :id])]
+  (let [id (Integer/parseInt (get-in request [:path-params :id]))]
     (swap! data-model
       (fn [d]
         (update-in d [:videos]
-          #(for [el % :when (not= id (:id el))] el))))))
+          #(for [el % :when (not= id (:id el))] el))))
+    (bootstrap/edn-response {:id id :data data-model})))
 
 (defn add-video [request]
   (let [video (:edn-params (body-params/edn-parser request))]

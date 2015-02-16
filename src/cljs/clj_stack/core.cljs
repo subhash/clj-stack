@@ -20,6 +20,11 @@
     (om/set-state! owner :new-video-name "")
     (om/set-state! owner :new-video-url "")))
 
+(defn delete-video [videos del-video]
+  (om/transact! videos
+    (fn [vs] (vec (remove #(= % del-video) vs))))
+  (edn-xhr {:url (str "/videos/" (:id del-video)) :method :delete}))
+
 (defn new-video-view [videos owner]
   (reify
     om/IInitState
@@ -43,7 +48,7 @@
           (dom/iframe #js {:className "embed-responsive-item"
                            :src (:url video)}))
         (dom/button #js {:className "btn btn-danger btn-xs pull-right"
-                       :onClick #(put! delete_channel @video)} "Remove" )))))
+                       :onClick #(put! delete_channel video)} "Remove" )))))
 
 
 (defn videos-view [videos owner]
@@ -55,8 +60,7 @@
       (let [delete_channel (om/get-state owner :delete_channel)]
         (go (loop []
           (let [del-video (<! delete_channel)]
-            (om/transact! videos
-              (fn [vs] (vec (remove #(= % del-video) vs))))
+            (delete-video videos del-video)
             (recur))))))
     om/IRenderState
     (render-state [_ {:keys [delete_channel]}]
