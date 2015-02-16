@@ -19,10 +19,22 @@
 (defn videos [request]
   (bootstrap/edn-response @data-model))
 
+(defn delete-video [request]
+  (let [id (get-in request [:path-params :id])]
+    (swap! data-model
+      (fn [d]
+        (update-in d [:videos]
+          #(for [el % :when (not= id (:id el))] el))))))
+
+(defn add-video [request]
+  (let [video (:edn-params (body-params/edn-parser request))]
+    (swap! data-model (fn [d] (update-in d [:videos] #(conj % video))))
+    (ring-resp/response "ok")))
 
 (defroutes routes
   [[["/" {:get home-page}]
-    ["/videos" {:get videos}]]])
+    ["/videos" {:get videos :post add-video}]
+    ["/videos/:id" {:delete delete-video}]]])
 
 (def service {:env :prod
               ::bootstrap/routes routes

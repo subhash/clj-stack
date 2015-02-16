@@ -7,16 +7,16 @@
 
 (enable-console-print!)
 
-(def app-model (atom {:videos
-                      [{:id 1 :title "Intro to Datomic" :url "http://www.youtube.com/embed/RKcqYZZ9RDY"}
-                       {:id 2 :title "The Functional Final Frontier" :url "http://www.youtube.com/embed/DMtwq3QtddY"}]}))
+(def app-model (atom {:videos []}))
 
 
 (defn add-video [videos owner]
   (let [title (-> (om/get-node owner "new-video-title") .-value)
-        url (-> (om/get-node owner "new-video-url") .-value)]
-    (om/transact! videos #(conj % {:id (rand-int 1000) :title title :url url}))
+        url (-> (om/get-node owner "new-video-url") .-value)
+        video-data {:id (rand-int 1000) :title title :url url}]
+    (om/transact! videos #(conj % video-data))
     (println "app-model: " @app-model)
+    (edn-xhr {:url "/videos" :method :post :data video-data})
     (om/set-state! owner :new-video-name "")
     (om/set-state! owner :new-video-url "")))
 
@@ -79,5 +79,7 @@
  (let [target (. js/document (getElementById "app"))]
    {:method :get
     :url "/videos"
-    :on-complete #(om/root app-view % {:target target})}))
+    :on-complete (fn [res]
+                   (reset! app-model res)
+                   (om/root app-view res {:target target}))}))
 
