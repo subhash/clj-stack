@@ -3,13 +3,12 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.route.definition :refer [defroutes]]
-            [ring.util.response :as ring-resp]))
+            [ring.util.response :as ring-resp]
+            [datomic.api :as d]))
 
-(def data-model
-  (atom
-   {:videos
-    [{:id 1 :title "Intro to Datomic" :url "http://www.youtube.com/embed/RKcqYZZ9RDY"}
-    {:id 2 :title "The Functional Final Frontier" :url "http://www.youtube.com/embed/DMtwq3QtddY"}]}))
+(def uri "datomic:dev://localhost:4334/clj_stack")
+
+(def conn (d/connect uri))
 
 (defn home-page
   [request]
@@ -17,19 +16,17 @@
       (ring-resp/content-type "text/html")))
 
 (defn videos [request]
-  (bootstrap/edn-response @data-model))
+  (let [vs (d/q '[:find (pull ?v [*]) :where [?v :video/title ?t]] (d/db conn))]
+    (bootstrap/edn-response {:videos (vec (apply concat vs))})))
 
 (defn delete-video [request]
-  (let [id (Integer/parseInt (get-in request [:path-params :id]))]
-    (swap! data-model
-      (fn [d]
-        (update-in d [:videos]
-          #(for [el % :when (not= id (:id el))] el))))
-    (bootstrap/edn-response {:id id :data data-model})))
+  (let [id (Long/parseLong (get-in request [:path-params :id]))]
+    @(d/transact conn [[:db.fn/retractEntity id]])
+    (ring-resp/response "ok")))
 
 (defn add-video [request]
   (let [video (:edn-params (body-params/edn-parser request))]
-    (swap! data-model (fn [d] (update-in d [:videos] #(conj % video))))
+    @(d/transact conn [(merge {:db/id #db/id[:db.part/user]} video)])
     (ring-resp/response "ok")))
 
 (defroutes routes

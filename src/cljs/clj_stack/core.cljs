@@ -13,9 +13,8 @@
 (defn add-video [videos owner]
   (let [title (-> (om/get-node owner "new-video-title") .-value)
         url (-> (om/get-node owner "new-video-url") .-value)
-        video-data {:id (rand-int 1000) :title title :url url}]
+        video-data {:video/title title :video/url url}]
     (om/transact! videos #(conj % video-data))
-    (println "app-model: " @app-model)
     (edn-xhr {:url "/videos" :method :post :data video-data})
     (om/set-state! owner :new-video-name "")
     (om/set-state! owner :new-video-url "")))
@@ -23,7 +22,7 @@
 (defn delete-video [videos del-video]
   (om/transact! videos
     (fn [vs] (vec (remove #(= % del-video) vs))))
-  (edn-xhr {:url (str "/videos/" (:id del-video)) :method :delete}))
+  (edn-xhr {:url (str "/videos/" (:db/id del-video)) :method :delete}))
 
 (defn new-video-view [videos owner]
   (reify
@@ -46,7 +45,7 @@
       (dom/li #js {:className "col-sm-4"}
         (dom/div #js {:className "embed-responsive embed-responsive-4by3"}
           (dom/iframe #js {:className "embed-responsive-item"
-                           :src (:url video)}))
+                           :src (:video/url video)}))
         (dom/button #js {:className "btn btn-danger btn-xs pull-right"
                        :onClick #(put! delete_channel video)} "Remove" )))))
 

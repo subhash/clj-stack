@@ -13,7 +13,8 @@
                  [org.slf4j/jul-to-slf4j "1.7.7"]
                  [org.slf4j/jcl-over-slf4j "1.7.7"]
                  [org.slf4j/log4j-over-slf4j "1.7.7"]
-                 [org.clojure/tools.namespace "0.2.9"]]
+                 [org.clojure/tools.namespace "0.2.9"]
+                 [com.datomic/datomic-pro "0.9.5130"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]]
 

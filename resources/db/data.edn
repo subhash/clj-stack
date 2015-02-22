@@ -1,0 +1,6 @@
+[{:db/id #db/id[:db.part/user]
+  :video/title "Intro to Datomic"
+  :video/url "http://www.youtube.com/embed/RKcqYZZ9RDY"}
+ {:db/id #db/id[:db.part/user]
+  :video/title "The Functional Final Frontier"
+  :video/url "http://www.youtube.com/embed/DMtwq3QtddY"}]
