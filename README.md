@@ -1,37 +1,12 @@
-# clj-stack
+# Clojure Everywhere
 
-FIXME: Write a one-line description of your library/project.
+This tutorial explores the use of Clojure throughout the web application stack. We start by building a client-only application in [[Clojure in the client]] and then move the data model to the server in [[Clojure in the server]]. Finally, we finish up with a persisted database in [[Clojure in the database]]. As an addendum, [[Datomic from the ground up]] introduces basic concepts of Datomic. Through the tutorial, we become familiar with various frameworks and technologies like Om, Pedestal and of course, Datomic
 
-## Overview
+## Prerequisites
 
-FIXME: Write a paragraph about the library/project and highlight its goals.
+We assume a working knowledge of Clojure. Though not necessary, a basic understanding of ReactJS (especially it's approach to a Virtual DOM) will be useful. 
 
-## Setup
+## Intended audience
 
-First-time Clojurescript developers, add the following to your bash .profile:
+This tutorial is basically a consolidated form of information found in various tutorials and guides. The added perspective is how the various frameworks work together. The target audience is someone in between n00b and Nolen.
 
-    LEIN_FAST_TRAMPOLINE=y
-    export LEIN_FAST_TRAMPOLINE
-    alias cljsbuild="lein trampoline cljsbuild $@"
-
-To avoid compiling ClojureScript for each build, AOT Clojurescript locally in your project with the following:
-
-    lein trampoline run -m clojure.main
-    user=> (compile 'cljs.closure)
-    user=> (compile 'cljs.core)
-
-Subsequent builds can use:
-
-    lein cljsbuild auto
-
-Clean project specific out:
-
-     lein clean
-
-For more info, read [Waitin'](http://swannodette.github.io/2014/12/22/waitin/).
-
-## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
