@@ -8,5 +8,7 @@ We assume a working knowledge of Clojure. Though not necessary, a basic understa
 
 ## Intended audience
 
-This tutorial is basically a consolidated form of information found in various tutorials and guides. The added perspective is how the various frameworks work together. The target audience is someone in between n00b and Nolen.
+This tutorial is basically a consolidated form of information found in various tutorials and guides. It's expected to provide an easy start to build a Clojure stack and hopefully provide a provide a perspective on how the various frameworks work together. 
+
+The target audience is somewhere between n00b and Nolen.
 
